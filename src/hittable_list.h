@@ -1,6 +1,6 @@
 #ifndef HITTABLE_LIST_H
 #define HITTABLE_LIST_H
-
+#include "aabb.h"
 #include "hittable.h"
 #include <vector>
 
@@ -17,6 +17,7 @@ public:
     void add(shared_ptr<hittable> object)
     {
         objects.push_back(object);
+        bbox = aabb(object->bounding_box());
     }
 
     bool hit(const ray &r, interval ray_t, hit_record &rec) const override
@@ -37,6 +38,10 @@ public:
 
         return hit_anything;
     }
+    aabb bounding_box() const override { return bbox; }
+
+private:
+    aabb bbox;
 };
 
 #endif
