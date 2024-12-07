@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include "rtw_stb_image.h"
+#include "perlin.h"
 
 class texture
 {
@@ -73,4 +74,17 @@ private:
     rtw_image image;
 };
 
+class perlin_texture : public texture
+{
+public:
+    perlin_texture(double scale) : inv_scale(1.0 / scale), perlin_noise(perlin()) {}
+    color value(double u, double v, const point3 &p) const override
+    {
+        return color(1.0, 1.0, 1.0) * perlin_noise.noise(inv_scale * p);
+    }
+
+private:
+    double inv_scale;
+    perlin perlin_noise;
+};
 #endif
