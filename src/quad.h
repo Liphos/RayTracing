@@ -64,7 +64,7 @@ public:
         return true;
     }
 
-private:
+protected:
     point3 Q;
     vec3 u, v;
     vec3 w;
@@ -74,4 +74,39 @@ private:
     double D;
 };
 
+class triangle : public quad
+{
+public:
+    triangle(const point3 &Q, const vec3 &u, const vec3 &v, shared_ptr<material> mat)
+        : quad(Q, u, v, mat) {}
+    bool is_interior(double a, double b, hit_record &rec) const override
+    {
+        interval unit_interval = interval(0, 1);
+
+        if (!unit_interval.contains(a) || !unit_interval.contains(b) || a + b > 1)
+            return false;
+
+        rec.u = a;
+        rec.v = b;
+        return true;
+    }
+};
+
+class circle : public quad
+{
+public:
+    circle(const point3 &Q, const vec3 &u, const vec3 &v, shared_ptr<material> mat)
+        : quad(Q, u, v, mat) {}
+    bool is_interior(double a, double b, hit_record &rec) const override
+    {
+        interval unit_interval = interval(0, 1);
+
+        if (!unit_interval.contains(a) || !unit_interval.contains(b) || sqrt((a - 0.5) * (a - 0.5) + (b - 0.5) * (b - 0.5)) > 0.5)
+            return false;
+
+        rec.u = a;
+        rec.v = b;
+        return true;
+    }
+};
 #endif
