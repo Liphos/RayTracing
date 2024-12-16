@@ -73,6 +73,7 @@ void bouncing_spheres()
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+    cam.background_color = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -100,6 +101,7 @@ void checkered_spheres()
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+    cam.background_color = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -123,6 +125,7 @@ void earth()
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+    cam.background_color = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(0, 0, 12);
@@ -148,6 +151,7 @@ void perlin_spheres()
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+    cam.background_color = color(0.70, 0.80, 1.00);
 
     cam.vfov = 20;
     cam.lookfrom = point3(13, 2, 3);
@@ -183,6 +187,7 @@ void quads()
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+    cam.background_color = color(0.70, 0.80, 1.00);
 
     cam.vfov = 80;
     cam.lookfrom = point3(0, 0, 9);
@@ -218,6 +223,7 @@ void planar_shapes()
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+    cam.background_color = color(0.70, 0.80, 1.00);
 
     cam.vfov = 80;
     cam.lookfrom = point3(0, 0, 9);
@@ -228,10 +234,38 @@ void planar_shapes()
 
     cam.render(world);
 }
+void simple_light()
+{
+    hittable_list world;
+
+    auto pertext = make_shared<perlin_texture>(0.25);
+    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
+    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+
+    auto difflight = make_shared<diffuse_light>(color(4, 4, 4));
+    world.add(make_shared<quad>(point3(3, 1, -2), vec3(2, 0, 0), vec3(0, 2, 0), difflight));
+
+    camera cam;
+
+    cam.aspect_ratio = 16.0 / 9.0;
+    cam.image_width = 400;
+    cam.samples_per_pixel = 100;
+    cam.max_depth = 50;
+    cam.background_color = color(0, 0, 0);
+
+    cam.vfov = 20;
+    cam.lookfrom = point3(26, 3, 6);
+    cam.lookat = point3(0, 2, 0);
+    cam.vup = vec3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    cam.render(world);
+}
 
 int main()
 {
-    switch (6)
+    switch (7)
     {
     case 1:
         bouncing_spheres();
@@ -250,6 +284,9 @@ int main()
         break;
     case 6:
         planar_shapes();
+        break;
+    case 7:
+        simple_light();
         break;
     }
 }
