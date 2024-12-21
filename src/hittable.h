@@ -33,5 +33,28 @@ public:
 
     virtual aabb bounding_box() const = 0;
 };
+class translate : hittable
+{
+public:
+    translate(shared_ptr<hittable> object, const vec3 &offset) : object(object), offset(offset) { bbox = object->bounding_box() + offset; }
+    bool hit(const ray &r, interval ray_t, hit_record &rec) const override
+    {
+        // Create ray with origin translated by offset
+        ray moved_r(r.origin() - offset, r.direction(), r.time());
+        // Check if the new ray hits the object
+        if (!object->hit(moved_r, ray_t, rec))
+            return false;
+        // Correct the hit position by the offset
+        rec.p += offset;
+
+        return true;
+    }
+    aabb bounding_box() const override { return bbox; }
+
+private:
+    shared_ptr<hittable> object;
+    vec3 offset;
+    aabb bbox;
+};
 
 #endif
