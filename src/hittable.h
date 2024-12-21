@@ -33,7 +33,7 @@ public:
 
     virtual aabb bounding_box() const = 0;
 };
-class translate : hittable
+class translate : public hittable
 {
 public:
     translate(shared_ptr<hittable> object, const vec3 &offset) : object(object), offset(offset) { bbox = object->bounding_box() + offset; }
